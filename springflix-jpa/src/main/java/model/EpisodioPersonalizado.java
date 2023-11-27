@@ -1,9 +1,7 @@
-package main;
+package model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-
-import model.EpisodioBase;
 
 public class EpisodioPersonalizado {
 	private Integer numeroTemporada;

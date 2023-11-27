@@ -27,6 +27,8 @@ Thumbs.db
 .classpath
 HELP.md
 .project
+application.properties
+
 # Compiled class file
 *.class
 

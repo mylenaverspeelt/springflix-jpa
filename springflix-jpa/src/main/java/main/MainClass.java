@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import model.SerieBase;
+import model.SeriePersonalizada;
 import model.Temporada;
+import repository.SerieRepository;
 import service.ConsumoApi;
 import service.ConverteDados;
 
@@ -17,8 +21,14 @@ public class MainClass {
 	private ConverteDados conversor = new ConverteDados();
 	private final String ENDERECO = "https://www.omdbapi.com/?t=";
 	private final String API_KEY = "&apikey=6585022c";
-	private List <SerieBase> listaSeriesBase = new ArrayList<>();
-	
+	private List<SerieBase> listaSeriesBase = new ArrayList<>();
+
+	private SerieRepository repositorio;
+
+	public MainClass(SerieRepository repositorio) {
+		this.repositorio = repositorio;
+	}
+
 	public void exibeMenu() {
 
 		var opcaoEscolhida = -1;
@@ -47,27 +57,29 @@ public class MainClass {
 				break;
 			case 0:
 				System.out.println("Saindo...");
+				System.exit(0);
 				break;
 			default:
-				System.out.println("Opção inválida");	
+				System.out.println("Opção inválida");
 			}
 		}
 	}
-	
+
 	private void listarSeriesBuscadas() {
 		List<SeriePersonalizada> listaSeriesPersonalizadas = new ArrayList<>();
-		
-		listaSeriesPersonalizadas = listaSeriesBase.stream()
-				.map(serieBase -> new SeriePersonalizada(serieBase)).collect(Collectors.toList());
 
-		listaSeriesPersonalizadas.stream()
-		.sorted(Comparator.comparing(SeriePersonalizada::getGenero))
-		.forEach(item -> System.out.println(item));
+		listaSeriesPersonalizadas = listaSeriesBase.stream().map(serieBase -> new SeriePersonalizada(serieBase))
+				.collect(Collectors.toList());
+
+		listaSeriesPersonalizadas.stream().sorted(Comparator.comparing(SeriePersonalizada::getGenero))
+				.forEach(item -> System.out.println(item));
 	}
 
 	private void buscarSerieWeb() {
 		SerieBase dadosBuscados = getSerie();
-		listaSeriesBase.add(dadosBuscados);
+//		listaSeriesBase.add(dadosBuscados);
+		SeriePersonalizada serie = new SeriePersonalizada(dadosBuscados);
+		repositorio.save(serie);
 		System.out.println(dadosBuscados);
 	}
 
