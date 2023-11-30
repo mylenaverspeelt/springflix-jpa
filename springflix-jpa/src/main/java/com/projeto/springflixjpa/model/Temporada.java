@@ -1,4 +1,4 @@
-package model;
+package com.projeto.springflixjpa.model;
 
 import java.util.List;
 

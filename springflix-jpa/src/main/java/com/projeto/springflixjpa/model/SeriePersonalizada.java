@@ -1,4 +1,4 @@
-package model;
+package com.projeto.springflixjpa.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import main.GenerosEnum;
+import com.projeto.springflixjpa.main.GenerosEnum;
 
 @Entity
 @Table(name = "series")
 public class SeriePersonalizada {
-	
+
+	@jakarta.persistence.Id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -55,13 +56,17 @@ public class SeriePersonalizada {
 
 	@Transient
 	private List<EpisodioPersonalizado> listaEpisodios = new ArrayList<>();
-	
-	public Long getId() {
-		return id;
+
+	public SeriePersonalizada() {
+
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
 	}
 	
 	public List<EpisodioPersonalizado> getListaEpisodios() {
@@ -133,5 +138,4 @@ public class SeriePersonalizada {
 		return "genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
 				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse;
 	}
-
 }

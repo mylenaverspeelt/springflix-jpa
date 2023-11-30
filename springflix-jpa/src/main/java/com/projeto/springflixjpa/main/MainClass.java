@@ -1,4 +1,4 @@
-package main;
+package com.projeto.springflixjpa.main;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import model.SerieBase;
-import model.SeriePersonalizada;
-import model.Temporada;
-import repository.SerieRepository;
-import service.ConsumoApi;
-import service.ConverteDados;
+import com.projeto.springflixjpa.model.SerieBase;
+import com.projeto.springflixjpa.model.SeriePersonalizada;
+import com.projeto.springflixjpa.model.Temporada;
+import com.projeto.springflixjpa.repository.SerieRepository;
+import com.projeto.springflixjpa.service.ConsumoApi;
+import com.projeto.springflixjpa.service.ConverteDados;
 
 public class MainClass {
 	private Scanner leitura = new Scanner(System.in);

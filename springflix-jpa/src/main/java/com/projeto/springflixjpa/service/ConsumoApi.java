@@ -1,4 +1,4 @@
-package service;
+package com.projeto.springflixjpa.service;
 
 import java.io.IOException;
 import java.net.URI;

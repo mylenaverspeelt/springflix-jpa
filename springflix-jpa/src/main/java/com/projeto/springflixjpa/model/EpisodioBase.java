@@ -1,4 +1,4 @@
-package model;
+package com.projeto.springflixjpa.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
