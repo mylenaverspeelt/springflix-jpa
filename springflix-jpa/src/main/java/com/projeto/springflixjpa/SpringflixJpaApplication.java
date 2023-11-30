@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.projeto.springflixjpa.main.MainClass;
+import com.projeto.springflixjpa.principal.Principal;
 import com.projeto.springflixjpa.repository.SerieRepository;
 
 
@@ -21,7 +21,7 @@ public class SpringflixJpaApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        MainClass mainClass = new MainClass(repositorio);
+        Principal mainClass = new Principal(repositorio);
         mainClass.exibeMenu();
     }
 }

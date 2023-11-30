@@ -1,15 +1,28 @@
 package com.projeto.springflixjpa.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.ManyToAny;
+import org.springframework.data.annotation.Id;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+@Entity
+@Table(name="episodios")
 public class EpisodioPersonalizado {
 	private Integer numeroTemporada;
 	private String titulo;
 	private Integer numeroEpisodio;
 	private Double avaliacao;
 	private LocalDate dataLancamento;
-		
+	@ManyToOne
+	private SeriePersonalizada serie;
+
+	@jakarta.persistence.Id
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	public EpisodioPersonalizado(Integer numeroTemporada, EpisodioBase episodio) {
 		this.numeroTemporada = numeroTemporada;
 		this.titulo = episodio.titulo();
@@ -21,13 +34,33 @@ public class EpisodioPersonalizado {
 		}
 		try {
 			this.dataLancamento = LocalDate.parse(episodio.dataLancamento());
-				
+
 		}catch(DateTimeParseException e) {
 			this.dataLancamento = null;
 		}
-		
-		}
-	
+
+	}
+
+	public EpisodioPersonalizado() {
+
+	}
+
+	public SeriePersonalizada getSerie() {
+		return serie;
+	}
+
+	public void setSerie(SeriePersonalizada serie) {
+		this.serie = serie;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Integer getnumeroTemporada() {
 		return numeroTemporada;
 	}
@@ -64,6 +97,5 @@ public class EpisodioPersonalizado {
 		return "EpisodioPersonalizado [numeroTemporada=" + numeroTemporada + ", titulo=" + titulo + ", numeroEpisodio="
 				+ numeroEpisodio + ", avaliacao=" + avaliacao + ", dataLancamento=" + dataLancamento + "]";
 	}
-	
-	
+
 }

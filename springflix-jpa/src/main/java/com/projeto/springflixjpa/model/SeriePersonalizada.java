@@ -3,17 +3,10 @@ package com.projeto.springflixjpa.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import com.projeto.springflixjpa.main.GenerosEnum;
+import com.projeto.springflixjpa.principal.GenerosEnum;
 
 @Entity
 @Table(name = "series")
@@ -28,7 +21,7 @@ public class SeriePersonalizada {
 	private String titulo;
 	private Integer totalTemporadas;
 	private Double avaliacao;
-	
+
 	// enum personalizado pois sempre vai ser uma lista fixa de opções / informa pro banco pra salvar a string do enum
 	@Enumerated(EnumType.STRING)
 	private GenerosEnum genero;
@@ -54,7 +47,7 @@ public class SeriePersonalizada {
 		this.sinopse = serie.sinopse();
 	}
 
-	@Transient
+	@OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<EpisodioPersonalizado> listaEpisodios = new ArrayList<>();
 
 	public SeriePersonalizada() {
@@ -68,12 +61,13 @@ public class SeriePersonalizada {
 	public Long getId() {
 		return id;
 	}
-	
+
 	public List<EpisodioPersonalizado> getListaEpisodios() {
 		return listaEpisodios;
 	}
 
 	public void setListaEpisodios(List<EpisodioPersonalizado> listaEpisodios) {
+		listaEpisodios.forEach(e -> e.setSerie(this));
 		this.listaEpisodios = listaEpisodios;
 	}
 
@@ -136,6 +130,6 @@ public class SeriePersonalizada {
 	@Override
 	public String toString() {
 		return "genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
-				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse;
+				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + ", episodios=" + listaEpisodios;
 	}
 }

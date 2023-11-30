@@ -1,4 +1,4 @@
-package com.projeto.springflixjpa.main;
+package com.projeto.springflixjpa.principal;
 
 public enum GenerosEnum {
 ACAO("Action"),
