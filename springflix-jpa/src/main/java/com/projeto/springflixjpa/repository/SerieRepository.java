@@ -15,4 +15,5 @@ public interface SerieRepository extends JpaRepository<SeriePersonalizada, Long>
     List<SeriePersonalizada> findByAtoresContainingIgnoreCase(String nomeAtor);
 
     List<SeriePersonalizada> findByAvaliacaoGreaterThanEqual(Double media);
+    List<SeriePersonalizada> findTop5ByOrderByAvaliacaoDesc();
 }
