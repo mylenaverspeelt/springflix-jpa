@@ -4,18 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import com.projeto.springflixjpa.principal.GenerosEnum;
 
 @Entity
 @Table(name = "series")
 public class SeriePersonalizada {
-
-	@jakarta.persistence.Id
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
 	@Column(unique = true)
 	private String titulo;
@@ -28,6 +22,9 @@ public class SeriePersonalizada {
 	private String atores;
 	private String poster;
 	private String sinopse;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	public SeriePersonalizada(SerieBase serie) {
 		super();
@@ -53,15 +50,6 @@ public class SeriePersonalizada {
 	public SeriePersonalizada() {
 
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
 	public List<EpisodioPersonalizado> getListaEpisodios() {
 		return listaEpisodios;
 	}
@@ -131,5 +119,13 @@ public class SeriePersonalizada {
 	public String toString() {
 		return "genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
 				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + ", episodios=" + listaEpisodios;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
 	}
 }

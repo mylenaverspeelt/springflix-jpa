@@ -2,7 +2,6 @@ package com.projeto.springflixjpa.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ManyToAny;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -17,11 +16,10 @@ public class EpisodioPersonalizado {
 	private LocalDate dataLancamento;
 	@ManyToOne
 	private SeriePersonalizada serie;
-
-	@jakarta.persistence.Id
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 
 	public EpisodioPersonalizado(Integer numeroTemporada, EpisodioBase episodio) {
 		this.numeroTemporada = numeroTemporada;
@@ -51,14 +49,6 @@ public class EpisodioPersonalizado {
 
 	public void setSerie(SeriePersonalizada serie) {
 		this.serie = serie;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Integer getnumeroTemporada() {
@@ -98,4 +88,11 @@ public class EpisodioPersonalizado {
 				+ numeroEpisodio + ", avaliacao=" + avaliacao + ", dataLancamento=" + dataLancamento + "]";
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
+	}
 }

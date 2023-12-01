@@ -30,9 +30,10 @@ public class Principal {
 
 		while (opcaoEscolhida != 0) {
 			var menu = """
-                    1 - Buscar séries
-                    2 - Buscar episódios
-                    3 - Listar séries buscadas
+                    1 - Cadastrar nova série no banco
+                    2 - Listar séries salvas
+                    3 - Buscar temporadas 
+                    4 - Procurar série por trecho do nome
                     0 - Sair
                     """;
 
@@ -45,10 +46,13 @@ public class Principal {
 					salvarSerieBanco();
 					break;
 				case 2:
-					buscarEpisodioPorSerie();
+					listarSeriesBuscadas();
 					break;
 				case 3:
-					listarSeriesBuscadas();
+					buscarTemporadasDaSerie();
+					break;
+				case 4:
+					buscarSeriePorParteDoTitulo();
 					break;
 				case 0:
 					System.out.println("Programa finalizado com sucesso!");
@@ -57,6 +61,18 @@ public class Principal {
 				default:
 					System.out.println("Opção inválida");
 			}
+		}
+	}
+
+	private void buscarSeriePorParteDoTitulo() {
+		System.out.println("Digite o nome da série para busca:");
+		var nomeSerie = leitura.nextLine();
+		Optional<SeriePersonalizada> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+
+		if(serieBuscada.isPresent()){
+			System.out.println("Série encontrada: " + serieBuscada.get().getTitulo());
+		}else{
+			System.out.println("Série não encontrada. Adicione uma nova série (opção 1)!");
 		}
 	}
 
@@ -71,7 +87,7 @@ public class Principal {
 		SerieBase serieBuscadaAPI = buscarSerieWeb();
 		SeriePersonalizada novaSerie = new SeriePersonalizada(serieBuscadaAPI);
 		repositorio.save(novaSerie);
-		System.out.println(serieBuscadaAPI.titulo());
+		System.out.println("Série salva com sucesso: " + serieBuscadaAPI.titulo());
 	}
 
 	private SerieBase buscarSerieWeb() {
@@ -82,15 +98,13 @@ public class Principal {
 		return dadosSerie;
 	}
 
-	private void buscarEpisodioPorSerie() {
+	private void buscarTemporadasDaSerie() {
 
 		listarSeriesBuscadas();
-		System.out.println("Dentre as séries mostradas acima, digite qual delas você deseja ver os episódios:");
+		System.out.println("Dentre as séries mostradas acima, digite qual delas você deseja ver as temporadas:");
 		String nomeSerie = leitura.nextLine();
 
-		Optional<SeriePersonalizada> serieEncontradaBanco = listaSeriesBanco.stream()
-				.filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
-				.findFirst();
+		Optional<SeriePersonalizada> serieEncontradaBanco = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
 		if (serieEncontradaBanco.isPresent()) {
 
