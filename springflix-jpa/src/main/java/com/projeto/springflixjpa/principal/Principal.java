@@ -10,6 +10,7 @@ import com.projeto.springflixjpa.model.Temporada;
 import com.projeto.springflixjpa.repository.SerieRepository;
 import com.projeto.springflixjpa.service.ConsumoApi;
 import com.projeto.springflixjpa.service.ConverteDados;
+import jdk.jfr.Category;
 
 public class Principal {
     private Scanner leitura = new Scanner(System.in);
@@ -30,6 +31,7 @@ public class Principal {
 
         while (opcaoEscolhida != 0) {
             var menu = """
+                    *****************************************************
                     1 - Cadastrar nova série no banco
                     2 - Listar séries salvas
                     3 - Buscar temporadas 
@@ -37,7 +39,10 @@ public class Principal {
                     5 - Buscar série pelo nome da atriz/ator
                     6 - Mostrar séries com avaliação acima da média
                     7 - Top 5 séries
+                    8 - Buscar séries por gênero
+                    
                     0 - Sair
+                    *****************************************************
                     """;
 
             System.out.println(menu);
@@ -49,7 +54,7 @@ public class Principal {
                     salvarSerieBanco();
                     break;
                 case 2:
-                    listarSeriesBuscadas();
+                    listarSeriesBanco();
                     break;
                 case 3:
                     buscarTemporadasDaSerie();
@@ -66,6 +71,9 @@ public class Principal {
                 case 7:
                     buscarTop5Series();
                     break;
+                case 8:
+                    buscarSeriesPorCategoria();
+                    break;
                 case 0:
                     System.out.println("Programa finalizado com sucesso!");
                     System.exit(0);
@@ -74,6 +82,16 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void buscarSeriesPorCategoria() {
+        System.out.println("Digite o gênero:");
+        var genero = leitura.nextLine();
+        GenerosEnum generoEnum = GenerosEnum.fromPortugues(genero);
+        List<SeriePersonalizada> seriesEncontradas = repositorio.findByGenero(generoEnum);
+        System.out.println("Séries de " + genero + ": ");
+        seriesEncontradas.forEach(s-> System.out.println(s.getTitulo()));
+
     }
 
     private void buscarTop5Series() {
@@ -93,7 +111,7 @@ public class Principal {
         System.out.println("Digite um nome de atriz/ator para busca: ");
         var nomeAtor = leitura.nextLine();
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByAtoresContainingIgnoreCase(nomeAtor);
-        System.out.println("Séries realizadas: ");
+        System.out.println("Séries realizadas por " + nomeAtor + " :");
         seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
 
     }
@@ -110,9 +128,9 @@ public class Principal {
         }
     }
 
-    private void listarSeriesBuscadas() {
+    private void listarSeriesBanco() {
         listaSeriesBanco = repositorio.findAll();
-
+        System.out.println("Séries salvas no banco: ");
         listaSeriesBanco.stream().sorted(Comparator.comparing(SeriePersonalizada::getGenero)).forEach(item -> System.out.println(item.getTitulo()));
     }
 
@@ -124,7 +142,7 @@ public class Principal {
     }
 
     private SerieBase buscarSerieWeb() {
-        System.out.println("Digite o nome da série para busca:");
+        System.out.println("Digite o nome da série que deseja cadastrar:");
         var nomeSerie = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
         SerieBase dadosSerie = conversor.obterDados(json, SerieBase.class);
@@ -133,7 +151,7 @@ public class Principal {
 
     private void buscarTemporadasDaSerie() {
 
-        listarSeriesBuscadas();
+        listarSeriesBanco();
         System.out.println("Dentre as séries mostradas acima, digite qual delas você deseja ver as temporadas:");
         String nomeSerie = leitura.nextLine();
 

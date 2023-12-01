@@ -1,5 +1,6 @@
 package com.projeto.springflixjpa.repository;
 
+import com.projeto.springflixjpa.principal.GenerosEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +13,12 @@ import java.util.Optional;
 @Repository
 public interface SerieRepository extends JpaRepository<SeriePersonalizada, Long> {
     Optional<SeriePersonalizada> findByTituloContainingIgnoreCase(String titulo);
+
     List<SeriePersonalizada> findByAtoresContainingIgnoreCase(String nomeAtor);
 
     List<SeriePersonalizada> findByAvaliacaoGreaterThanEqual(Double media);
+
     List<SeriePersonalizada> findTop5ByOrderByAvaliacaoDesc();
+
+    List<SeriePersonalizada> findByGenero(GenerosEnum genero);
 }
