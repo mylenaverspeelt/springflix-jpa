@@ -35,6 +35,7 @@ public class Principal {
                     3 - Buscar temporadas 
                     4 - Procurar série por trecho do nome
                     5 - Buscar série pelo nome da atriz/ator
+                    6 - Mostrar séries com avaliação acima da média
                     0 - Sair
                     """;
 
@@ -58,6 +59,9 @@ public class Principal {
                 case 5:
                     buscarSeriesPorAtor();
                     break;
+                case 6:
+                    buscarSeriesAcimaDaMedia();
+                    break;
                 case 0:
                     System.out.println("Programa finalizado com sucesso!");
                     System.exit(0);
@@ -66,6 +70,13 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void buscarSeriesAcimaDaMedia() {
+        System.out.println("Séries com avaliações superiores a 7.0: ");
+
+        List<SeriePersonalizada> seriesEncontradas = repositorio.findByAvaliacaoGreaterThanEqual(7.0);
+        seriesEncontradas.forEach(s-> System.out.println(s.getTitulo()));
     }
 
     private void buscarSeriesPorAtor() {

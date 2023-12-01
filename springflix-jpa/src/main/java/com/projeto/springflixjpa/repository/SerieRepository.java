@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface SerieRepository extends JpaRepository<SeriePersonalizada, Long> {
     Optional<SeriePersonalizada> findByTituloContainingIgnoreCase(String titulo);
     List<SeriePersonalizada> findByAtoresContainingIgnoreCase(String nomeAtor);
+
+    List<SeriePersonalizada> findByAvaliacaoGreaterThanEqual(Double media);
 }
