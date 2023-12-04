@@ -2,6 +2,8 @@ package com.projeto.springflixjpa.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 import jakarta.persistence.*;
 
@@ -33,13 +35,7 @@ public class SeriePersonalizada {
         super();
         this.titulo = serie.titulo();
         this.totalTemporadas = serie.totalTemporadas();
-        // em vez do try catch poderia ser:
-        // OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
-        try {
-            this.avaliacao = Double.valueOf(serie.avaliacao());
-        } catch (NumberFormatException e) {
-            this.avaliacao = 0.0;
-        }
+        OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
         // pega o primeiro genero que vem da api
         this.genero = GenerosEnum.fromString(serie.genero().split(",")[0].trim());
         this.atores = serie.atores();

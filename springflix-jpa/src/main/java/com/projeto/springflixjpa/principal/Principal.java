@@ -96,7 +96,7 @@ public class Principal {
 
     private void buscarEpisodiosDepoisDeUmaData() {
         buscarSeriePorParteDoTitulo();
-        if(serieBuscada.isPresent()){
+        if (serieBuscada.isPresent()) {
             System.out.println("Digite o ano limite de lançamento: ");
             var anoLancamento = scan.nextInt();
             scan.nextLine();
@@ -184,8 +184,18 @@ public class Principal {
     private SerieBase buscarSerieWeb() {
         System.out.println("Digite o nome da série que deseja cadastrar:");
         var nomeSerie = scan.nextLine();
+
+        if (!nomeSerie.matches("^[a-zA-Z0-9 ]+$")) {
+            System.out.println("O nome da série deve conter apenas caracteres alfa-numéricos1.");
+            return buscarSerieWeb();
+        }
+
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
         SerieBase dadosSerie = conversor.obterDados(json, SerieBase.class);
+        if (dadosSerie.titulo() == null && dadosSerie.sinopse() == null) {
+            System.out.println("Série não encontrada. Tente novamente.");
+            buscarSerieWeb();
+        }
         return dadosSerie;
     }
 

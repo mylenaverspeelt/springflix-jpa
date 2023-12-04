@@ -5,7 +5,8 @@ public enum GenerosEnum {
     ROMANCE("Romance", "Romance"),
     COMEDIA("Comedy", "Comedia"),
     DRAMA("Drama", "Drama"),
-    CRIME("Crime", "Crime");
+    CRIME("Crime", "Crime"),
+    ANIMACAO("Animation", "Animação");
 
     private String categoriaPortugues;
     private String categoriaOmdb;
