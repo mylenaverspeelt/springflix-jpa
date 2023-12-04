@@ -10,12 +10,11 @@ import com.projeto.springflixjpa.model.Temporada;
 import com.projeto.springflixjpa.repository.SerieRepository;
 import com.projeto.springflixjpa.service.ConsumoApi;
 import com.projeto.springflixjpa.service.ConverteDados;
-import jdk.jfr.Category;
 
 public class Principal {
-    private Scanner scan = new Scanner(System.in);
-    private ConsumoApi consumo = new ConsumoApi();
-    private ConverteDados conversor = new ConverteDados();
+    private final Scanner scan = new Scanner(System.in);
+    private final ConsumoApi consumo = new ConsumoApi();
+    private final ConverteDados conversor = new ConverteDados();
     private static final String ENDERECO = "https://www.omdbapi.com/?t=";
     private static final String API_KEY = "&apikey=6585022c";
     private List<SeriePersonalizada> listaSeriesBanco = new ArrayList<>();
@@ -44,6 +43,7 @@ public class Principal {
                     7 - Top 5 séries
                     8 - Buscar séries por gênero
                     9 - Top 5 episodios
+                    10 - Buscar episódios a partir de uma data
                                         
                     0 - Sair
                     *****************************************************
@@ -81,6 +81,9 @@ public class Principal {
                 case 9:
                     buscarTop5Episodios();
                     break;
+                case 10:
+                    buscarEpisodiosDepoisDeUmaData();
+                    break;
                 case 0:
                     System.out.println("Programa finalizado com sucesso!");
                     System.exit(0);
@@ -88,6 +91,18 @@ public class Principal {
                 default:
                     System.out.println("Opção inválida");
             }
+        }
+    }
+
+    private void buscarEpisodiosDepoisDeUmaData() {
+        buscarSeriePorParteDoTitulo();
+        if(serieBuscada.isPresent()){
+            System.out.println("Digite o ano limite de lançamento: ");
+            var anoLancamento = scan.nextInt();
+            scan.nextLine();
+
+            List<EpisodioPersonalizado> espisodiosRecebidos = repositorio.episodiosPorSerieEAno(serieBuscada, anoLancamento);
+            espisodiosRecebidos.forEach(item -> System.out.println(item.getTitulo()));
         }
     }
 
