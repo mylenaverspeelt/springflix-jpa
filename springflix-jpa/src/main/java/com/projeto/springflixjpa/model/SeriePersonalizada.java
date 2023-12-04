@@ -11,121 +11,123 @@ import com.projeto.springflixjpa.principal.GenerosEnum;
 @Table(name = "series")
 public class SeriePersonalizada {
 
-	@Column(unique = true)
-	private String titulo;
-	private Integer totalTemporadas;
-	private Double avaliacao;
+    @Column(unique = true)
+    private String titulo;
+    private Integer totalTemporadas;
+    private Double avaliacao;
 
-	// enum personalizado pois sempre vai ser uma lista fixa de opções / informa pro banco pra salvar a string do enum
-	@Enumerated(EnumType.STRING)
-	private GenerosEnum genero;
-	private String atores;
-	private String poster;
-	private String sinopse;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    // enum personalizado pois sempre vai ser uma lista fixa de opções / informa pro banco pra salvar a string do enum
+    @Enumerated(EnumType.STRING)
+    private GenerosEnum genero;
+    private String atores;
+    private String poster;
+    private String sinopse;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public SeriePersonalizada(SerieBase serie) {
-		super();
-		this.titulo = serie.titulo();
-		this.totalTemporadas = serie.totalTemporadas();
-		// em vez do try catch poderia ser:
-		// OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
-		try {
-			this.avaliacao = Double.valueOf(serie.avaliacao());
-		} catch (NumberFormatException e) {
-			this.avaliacao = 0.0;
-		}
-		// pega o primeiro genero que vem da api
-		this.genero = GenerosEnum.fromString(serie.genero().split(",")[0].trim());
-		this.atores = serie.atores();
-		this.poster = serie.poster();
-		this.sinopse = serie.sinopse();
-	}
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<EpisodioPersonalizado> listaEpisodios = new ArrayList<>();
 
-	@OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<EpisodioPersonalizado> listaEpisodios = new ArrayList<>();
+    public SeriePersonalizada(SerieBase serie) {
+        super();
+        this.titulo = serie.titulo();
+        this.totalTemporadas = serie.totalTemporadas();
+        // em vez do try catch poderia ser:
+        // OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
+        try {
+            this.avaliacao = Double.valueOf(serie.avaliacao());
+        } catch (NumberFormatException e) {
+            this.avaliacao = 0.0;
+        }
+        // pega o primeiro genero que vem da api
+        this.genero = GenerosEnum.fromString(serie.genero().split(",")[0].trim());
+        this.atores = serie.atores();
+        this.poster = serie.poster();
+        this.sinopse = serie.sinopse();
+    }
 
-	public SeriePersonalizada() {
 
-	}
-	public List<EpisodioPersonalizado> getListaEpisodios() {
-		return listaEpisodios;
-	}
+    public SeriePersonalizada() {
 
-	public void setListaEpisodios(List<EpisodioPersonalizado> listaEpisodios) {
-		listaEpisodios.forEach(e -> e.setSerie(this));
-		this.listaEpisodios = listaEpisodios;
-	}
+    }
 
-	public String getTitulo() {
-		return titulo;
-	}
+    public List<EpisodioPersonalizado> getListaEpisodios() {
+        return listaEpisodios;
+    }
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
+    public void setListaEpisodios(List<EpisodioPersonalizado> listaEpisodios) {
+        listaEpisodios.forEach(e -> e.setSerie(this));
+        this.listaEpisodios = listaEpisodios;
+    }
 
-	public Integer getTotalTemporadas() {
-		return totalTemporadas;
-	}
+    public String getTitulo() {
+        return titulo;
+    }
 
-	public void setTotalTemporadas(Integer totalTemporadas) {
-		this.totalTemporadas = totalTemporadas;
-	}
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-	public Double getAvaliacao() {
-		return avaliacao;
-	}
+    public Integer getTotalTemporadas() {
+        return totalTemporadas;
+    }
 
-	public void setAvaliacao(Double avaliacao) {
-		this.avaliacao = avaliacao;
-	}
+    public void setTotalTemporadas(Integer totalTemporadas) {
+        this.totalTemporadas = totalTemporadas;
+    }
 
-	public GenerosEnum getGenero() {
-		return genero;
-	}
+    public Double getAvaliacao() {
+        return avaliacao;
+    }
 
-	public void setGenero(GenerosEnum genero) {
-		this.genero = genero;
-	}
+    public void setAvaliacao(Double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
 
-	public String getAtores() {
-		return atores;
-	}
+    public GenerosEnum getGenero() {
+        return genero;
+    }
 
-	public void setAtores(String atores) {
-		this.atores = atores;
-	}
+    public void setGenero(GenerosEnum genero) {
+        this.genero = genero;
+    }
 
-	public String getPoster() {
-		return poster;
-	}
+    public String getAtores() {
+        return atores;
+    }
 
-	public void setPoster(String poster) {
-		this.poster = poster;
-	}
+    public void setAtores(String atores) {
+        this.atores = atores;
+    }
 
-	public String getSinopse() {
-		return sinopse;
-	}
+    public String getPoster() {
+        return poster;
+    }
 
-	public void setSinopse(String sinopse) {
-		this.sinopse = sinopse;
-	}
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
-	@Override
-	public String toString() {
-		return "genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
-				+ avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + ", episodios=" + listaEpisodios;
-	}
+    public String getSinopse() {
+        return sinopse;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setSinopse(String sinopse) {
+        this.sinopse = sinopse;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public String toString() {
+        return "genero=" + genero + ", titulo=" + titulo + ", totalTemporadas=" + totalTemporadas + ", avaliacao="
+                + avaliacao + ", atores=" + atores + ", poster=" + poster + ", sinopse=" + sinopse + ", episodios=" + listaEpisodios;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

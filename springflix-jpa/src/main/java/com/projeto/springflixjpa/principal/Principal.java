@@ -20,6 +20,7 @@ public class Principal {
     private static final String API_KEY = "&apikey=6585022c";
     private List<SeriePersonalizada> listaSeriesBanco = new ArrayList<>();
     private SerieRepository repositorio;
+    private Optional<SeriePersonalizada> serieBuscada;
 
     public Principal(SerieRepository repositorio) {
         this.repositorio = repositorio;
@@ -32,7 +33,9 @@ public class Principal {
         while (opcaoEscolhida != 0) {
             var menu = """
                     *****************************************************
-                    1 - Cadastrar nova série no banco
+                    Digite o número da opção desejada:
+                                        
+                    1 - Salvar nova série no banco
                     2 - Listar séries salvas
                     3 - Buscar temporadas 
                     4 - Procurar série por trecho do nome
@@ -40,7 +43,8 @@ public class Principal {
                     6 - Mostrar séries com avaliação acima da média
                     7 - Top 5 séries
                     8 - Buscar séries por gênero
-                    
+                    9 - Top 5 episodios
+                                        
                     0 - Sair
                     *****************************************************
                     """;
@@ -74,6 +78,9 @@ public class Principal {
                 case 8:
                     buscarSeriesPorCategoria();
                     break;
+                case 9:
+                    buscarTop5Episodios();
+                    break;
                 case 0:
                     System.out.println("Programa finalizado com sucesso!");
                     System.exit(0);
@@ -84,27 +91,37 @@ public class Principal {
         }
     }
 
+    private void buscarTop5Episodios() {
+        buscarSeriePorParteDoTitulo();
+        if (serieBuscada.isPresent()) {
+            SeriePersonalizada serie = serieBuscada.get();
+            List<EpisodioPersonalizado> top5episodios = repositorio.top5EpisodiosPorSerie(serie);
+            System.out.println("Top 5 episódios: ");
+            top5episodios.forEach(e -> System.out.println(e.getTitulo() + " / avaliação: " + e.getAvaliacao()));
+        }
+    }
+
     private void buscarSeriesPorCategoria() {
         System.out.println("Digite o gênero:");
         var genero = leitura.nextLine();
         GenerosEnum generoEnum = GenerosEnum.fromPortugues(genero);
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByGenero(generoEnum);
         System.out.println("Séries de " + genero + ": ");
-        seriesEncontradas.forEach(s-> System.out.println(s.getTitulo()));
+        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
 
     }
 
     private void buscarTop5Series() {
         List<SeriePersonalizada> seriesEncontradas = repositorio.findTop5ByOrderByAvaliacaoDesc();
         System.out.println("Top 5 séries encontradas: ");
-        seriesEncontradas.forEach(s-> System.out.println(s.getTitulo() + " / avaliação: " + s.getAvaliacao()));
+        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo() + " / avaliação: " + s.getAvaliacao()));
     }
 
     private void buscarSeriesAcimaDaMedia() {
         System.out.println("Séries com avaliações superiores a 7.0: ");
 
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByAvaliacaoGreaterThanEqual(7.0);
-        seriesEncontradas.forEach(s-> System.out.println(s.getTitulo()));
+        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
     }
 
     private void buscarSeriesPorAtor() {
@@ -119,7 +136,7 @@ public class Principal {
     private void buscarSeriePorParteDoTitulo() {
         System.out.println("Digite o nome da série para busca:");
         var nomeSerie = leitura.nextLine();
-        Optional<SeriePersonalizada> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serieBuscada.isPresent()) {
             System.out.println("Série encontrada: " + serieBuscada.get().getTitulo());
@@ -167,6 +184,7 @@ public class Principal {
                 var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
                 Temporada temporada = conversor.obterDados(json, Temporada.class);
                 temporadas.add(temporada);
+
             }
             temporadas.forEach(System.out::println);
 
