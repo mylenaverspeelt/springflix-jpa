@@ -13,7 +13,7 @@ import com.projeto.springflixjpa.service.ConverteDados;
 import jdk.jfr.Category;
 
 public class Principal {
-    private Scanner leitura = new Scanner(System.in);
+    private Scanner scan = new Scanner(System.in);
     private ConsumoApi consumo = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
     private static final String ENDERECO = "https://www.omdbapi.com/?t=";
@@ -37,7 +37,7 @@ public class Principal {
                                         
                     1 - Salvar nova série no banco
                     2 - Listar séries salvas
-                    3 - Buscar temporadas 
+                    3 - Listar temporadas
                     4 - Procurar série por trecho do nome
                     5 - Buscar série pelo nome da atriz/ator
                     6 - Mostrar séries com avaliação acima da média
@@ -50,8 +50,8 @@ public class Principal {
                     """;
 
             System.out.println(menu);
-            var opcao = leitura.nextInt();
-            leitura.nextLine();
+            var opcao = scan.nextInt();
+            scan.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -61,7 +61,7 @@ public class Principal {
                     listarSeriesBanco();
                     break;
                 case 3:
-                    buscarTemporadasDaSerie();
+                    listarTemporadas();
                     break;
                 case 4:
                     buscarSeriePorParteDoTitulo();
@@ -91,6 +91,13 @@ public class Principal {
         }
     }
 
+    private void listarTemporadas() {
+        listarSeriesBanco();
+        System.out.println("Dentre as séries mostradas acima, digite qual delas você deseja ver as temporadas:");
+        String nomeSerie = scan.nextLine();
+        buscarTemporadasDaSerie(nomeSerie);
+    }
+
     private void buscarTop5Episodios() {
         buscarSeriePorParteDoTitulo();
         if (serieBuscada.isPresent()) {
@@ -103,7 +110,7 @@ public class Principal {
 
     private void buscarSeriesPorCategoria() {
         System.out.println("Digite o gênero:");
-        var genero = leitura.nextLine();
+        var genero = scan.nextLine();
         GenerosEnum generoEnum = GenerosEnum.fromPortugues(genero);
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByGenero(generoEnum);
         System.out.println("Séries de " + genero + ": ");
@@ -126,7 +133,7 @@ public class Principal {
 
     private void buscarSeriesPorAtor() {
         System.out.println("Digite um nome de atriz/ator para busca: ");
-        var nomeAtor = leitura.nextLine();
+        var nomeAtor = scan.nextLine();
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByAtoresContainingIgnoreCase(nomeAtor);
         System.out.println("Séries realizadas por " + nomeAtor + " :");
         seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
@@ -135,7 +142,7 @@ public class Principal {
 
     private void buscarSeriePorParteDoTitulo() {
         System.out.println("Digite o nome da série para busca:");
-        var nomeSerie = leitura.nextLine();
+        var nomeSerie = scan.nextLine();
         serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serieBuscada.isPresent()) {
@@ -155,24 +162,21 @@ public class Principal {
         SerieBase serieBuscadaAPI = buscarSerieWeb();
         SeriePersonalizada novaSerie = new SeriePersonalizada(serieBuscadaAPI);
         repositorio.save(novaSerie);
+        buscarTemporadasDaSerie(novaSerie.getTitulo());
         System.out.println("Série salva com sucesso: " + serieBuscadaAPI.titulo());
     }
 
     private SerieBase buscarSerieWeb() {
         System.out.println("Digite o nome da série que deseja cadastrar:");
-        var nomeSerie = leitura.nextLine();
+        var nomeSerie = scan.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
         SerieBase dadosSerie = conversor.obterDados(json, SerieBase.class);
         return dadosSerie;
     }
 
-    private void buscarTemporadasDaSerie() {
+    private void buscarTemporadasDaSerie(String novaSerie) {
 
-        listarSeriesBanco();
-        System.out.println("Dentre as séries mostradas acima, digite qual delas você deseja ver as temporadas:");
-        String nomeSerie = leitura.nextLine();
-
-        Optional<SeriePersonalizada> serieEncontradaBanco = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        Optional<SeriePersonalizada> serieEncontradaBanco = repositorio.findByTituloContainingIgnoreCase(novaSerie);
 
         if (serieEncontradaBanco.isPresent()) {
 
