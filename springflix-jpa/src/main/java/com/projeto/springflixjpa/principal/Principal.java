@@ -29,7 +29,6 @@ public class Principal {
     }
 
     public void exibeMenu() {
-
         var opcaoEscolhida = -1;
 
         while (opcaoEscolhida != 0) {
@@ -45,7 +44,7 @@ public class Principal {
                     6 - Mostrar séries com avaliação acima da média
                     7 - Top 5 séries
                     8 - Buscar séries por gênero
-                    9 - Top 5 episodios
+                    9 - Top 5 episódios
                     10 - Buscar episódios a partir de uma data
                                         
                     0 - Sair
@@ -53,47 +52,56 @@ public class Principal {
                     """;
 
             System.out.println(menu);
-            var opcao = scan.nextInt();
-            scan.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    salvarSerieBanco();
-                    break;
-                case 2:
-                    listarSeriesBanco();
-                    break;
-                case 3:
-                    listarTemporadas();
-                    break;
-                case 4:
-                    buscarSeriePorParteDoTitulo();
-                    break;
-                case 5:
-                    buscarSeriesPorAtor();
-                    break;
-                case 6:
-                    buscarSeriesAcimaDaMedia();
-                    break;
-                case 7:
-                    buscarTop5Series();
-                    break;
-                case 8:
-                    buscarSeriesPorCategoria();
-                    break;
-                case 9:
-                    buscarTop5Episodios();
-                    break;
-                case 10:
-                    buscarEpisodiosDepoisDeUmaData();
-                    break;
-                case 0:
-                    System.out.println("Programa finalizado com sucesso!");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Opção inválida");
+            try {
+                var opcao = scan.nextInt();
+                scan.nextLine();
+                processarOpcao(opcao);
+            } catch (InputMismatchException e) {
+                System.out.println("Por favor, informe um número válido");
+                scan.nextLine();
             }
+        }
+    }
+
+    private void processarOpcao(int opcao) {
+        switch (opcao) {
+            case 1:
+                salvarSerieBanco();
+                break;
+            case 2:
+                listarSeriesBanco();
+                break;
+            case 3:
+                listarTemporadas();
+                break;
+            case 4:
+                buscarSeriePorParteDoTitulo();
+                break;
+            case 5:
+                buscarSeriesPorAtor();
+                break;
+            case 6:
+                buscarSeriesAcimaDaMedia();
+                break;
+            case 7:
+                buscarTop5Series();
+                break;
+            case 8:
+                buscarSeriesPorCategoria();
+                break;
+            case 9:
+                buscarTop5Episodios();
+                break;
+            case 10:
+                buscarEpisodiosDepoisDeUmaData();
+                break;
+            case 0:
+                System.out.println("Programa finalizado com sucesso!");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Opção inválida");
         }
     }
 

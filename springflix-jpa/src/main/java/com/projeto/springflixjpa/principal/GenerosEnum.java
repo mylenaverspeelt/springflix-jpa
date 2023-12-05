@@ -26,7 +26,7 @@ public enum GenerosEnum {
 
     public static GenerosEnum fromString(String text) {
         for (GenerosEnum categoria : GenerosEnum.values()) {
-            if (categoria.categoriaOmdb.equalsIgnoreCase(text)) {
+            if (categoria.categoriaOmdb.equalsIgnoreCase(text.trim())) {
                 return categoria;
             }
         }
