@@ -161,8 +161,13 @@ public class Principal {
         System.out.println("Digite um nome de atriz/ator para busca: ");
         var nomeAtor = scan.nextLine();
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByAtoresContainingIgnoreCase(nomeAtor);
-        System.out.println("Séries realizadas por " + nomeAtor + " :");
-        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
+
+        if(!seriesEncontradas.isEmpty()){
+            System.out.println("Séries realizadas por " + nomeAtor + " :");
+            seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
+        }else {
+            System.out.println("Não foram encontradas séries com o nome do ator informado. ");
+        }
 
     }
 
