@@ -1,5 +1,8 @@
 package com.projeto.springflixjpa.principal;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -185,18 +188,30 @@ public class Principal {
         System.out.println("Digite o nome da série que deseja cadastrar:");
         var nomeSerie = scan.nextLine();
 
-        if (!nomeSerie.matches("^[a-zA-Z0-9 ]+$")) {
-            System.out.println("O nome da série deve conter apenas caracteres alfa-numéricos1.");
-            return buscarSerieWeb();
-        }
+        String regex = "^[a-zA-Z0-9\\s]+$";
 
-        var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
-        SerieBase dadosSerie = conversor.obterDados(json, SerieBase.class);
-        if (dadosSerie.titulo() == null && dadosSerie.sinopse() == null) {
-            System.out.println("Série não encontrada. Tente novamente.");
-            buscarSerieWeb();
+        if (!nomeSerie.matches(regex)) {
+            System.out.println("O nome da série deve conter apenas caracteres alfa-numéricos.");
+            return buscarSerieWeb();
+        } else {
+
+            Optional<SeriePersonalizada> serieEscolhida = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+            if (serieEscolhida.isPresent()) {
+                System.out.println("Série já salva no banco de dados!");
+                return buscarSerieWeb();
+            }
+
+            String json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
+            SerieBase dadosSerie = conversor.obterDados(json, SerieBase.class);
+
+            if (dadosSerie.titulo() == null && dadosSerie.sinopse() == null) {
+                System.out.println("Série não encontrada. Tente novamente.");
+                return buscarSerieWeb();
+            } else {
+                return dadosSerie;
+            }
+
         }
-        return dadosSerie;
     }
 
     private void buscarTemporadasDaSerie(String novaSerie) {

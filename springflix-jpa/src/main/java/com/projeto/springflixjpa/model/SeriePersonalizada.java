@@ -35,14 +35,13 @@ public class SeriePersonalizada {
         super();
         this.titulo = serie.titulo();
         this.totalTemporadas = serie.totalTemporadas();
-        OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
+        this.avaliacao = OptionalDouble.of(Double.valueOf(serie.avaliacao())).orElse(0);
         // pega o primeiro genero que vem da api
         this.genero = GenerosEnum.fromString(serie.genero().split(",")[0].trim());
         this.atores = serie.atores();
         this.poster = serie.poster();
         this.sinopse = serie.sinopse();
     }
-
 
     public SeriePersonalizada() {
 
