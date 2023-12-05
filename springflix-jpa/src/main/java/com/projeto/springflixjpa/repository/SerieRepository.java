@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-//usar o nome do atributo quando for fazer uma derived querie, não o nome da coluna da tabela
+//usar o nome do atributo, não o nome da coluna
 @Repository
 public interface SerieRepository extends JpaRepository<SeriePersonalizada, Long> {
     Optional<SeriePersonalizada> findByTituloContainingIgnoreCase(String titulo);

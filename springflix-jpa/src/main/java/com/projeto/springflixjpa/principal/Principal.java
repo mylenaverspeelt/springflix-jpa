@@ -1,9 +1,5 @@
 package com.projeto.springflixjpa.principal;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -193,7 +189,6 @@ public class Principal {
         } else {
             System.out.println("Não foram encontradas séries com o nome do ator informado. ");
         }
-
     }
 
     private void buscarSeriePorParteDoTitulo() {
@@ -248,7 +243,6 @@ public class Principal {
             } else {
                 return dadosSerie;
             }
-
         }
     }
 
