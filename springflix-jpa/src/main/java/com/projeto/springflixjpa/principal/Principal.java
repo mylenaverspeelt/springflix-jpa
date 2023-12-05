@@ -88,7 +88,7 @@ public class Principal {
                 buscarTop5Series();
                 break;
             case 8:
-                buscarSeriesPorCategoria();
+                buscarSeriesPorGenero();
                 break;
             case 9:
                 buscarTop5Episodios();
@@ -134,15 +134,24 @@ public class Principal {
         }
     }
 
-    private void buscarSeriesPorCategoria() {
+    private void buscarSeriesPorGenero() {
         System.out.println("Digite o gênero:");
-        var genero = scan.nextLine();
-        GenerosEnum generoEnum = GenerosEnum.fromPortugues(genero);
-        List<SeriePersonalizada> seriesEncontradas = repositorio.findByGenero(generoEnum);
-        System.out.println("Séries de " + genero + ": ");
-        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
 
+        try {
+            String genero = scan.next();
+            scan.nextLine();
+
+            GenerosEnum generoEnum = GenerosEnum.fromPortugues(genero);
+            List<SeriePersonalizada> seriesEncontradas = repositorio.findByGenero(generoEnum);
+            System.out.println("Séries de " + genero + ": ");
+            seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Por favor, informe um genero válido");
+            buscarSeriesPorGenero();
+        }
     }
+
 
     private void buscarTop5Series() {
         List<SeriePersonalizada> seriesEncontradas = repositorio.findTop5ByOrderByAvaliacaoDesc();
@@ -162,10 +171,10 @@ public class Principal {
         var nomeAtor = scan.nextLine();
         List<SeriePersonalizada> seriesEncontradas = repositorio.findByAtoresContainingIgnoreCase(nomeAtor);
 
-        if(!seriesEncontradas.isEmpty()){
+        if (!seriesEncontradas.isEmpty()) {
             System.out.println("Séries realizadas por " + nomeAtor + " :");
             seriesEncontradas.forEach(s -> System.out.println(s.getTitulo()));
-        }else {
+        } else {
             System.out.println("Não foram encontradas séries com o nome do ator informado. ");
         }
 
