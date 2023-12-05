@@ -3,6 +3,8 @@ package com.projeto.springflixjpa.principal;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,7 @@ public class Principal {
                     7 - Top 5 séries
                     8 - Buscar séries por gênero
                     9 - Top 5 episódios
-                    10 - Buscar episódios a partir de uma data
+                    10 - Buscar episódios a partir de um ano
                                         
                     0 - Sair
                     *****************************************************
@@ -58,7 +60,7 @@ public class Principal {
                 scan.nextLine();
                 processarOpcao(opcao);
             } catch (InputMismatchException e) {
-                System.out.println("Por favor, informe um número válido");
+                System.out.println("Por favor, informe uma opção válida");
                 scan.nextLine();
             }
         }
@@ -94,7 +96,7 @@ public class Principal {
                 buscarTop5Episodios();
                 break;
             case 10:
-                buscarEpisodiosDepoisDeUmaData();
+                buscarEpisodiosAPartirDoAno();
                 break;
             case 0:
                 System.out.println("Programa finalizado com sucesso!");
@@ -105,15 +107,29 @@ public class Principal {
         }
     }
 
-    private void buscarEpisodiosDepoisDeUmaData() {
+    private void buscarEpisodiosAPartirDoAno() {
+
+        LocalDateTime dataAtual = LocalDateTime.now();
+        int anoAtual = dataAtual.getYear();
+
         buscarSeriePorParteDoTitulo();
         if (serieBuscada.isPresent()) {
-            System.out.println("Digite o ano limite de lançamento: ");
-            var anoLancamento = scan.nextInt();
-            scan.nextLine();
+            System.out.println("A partir de qual ano você deseja ver os episódios? ");
 
-            List<EpisodioPersonalizado> espisodiosRecebidos = repositorio.episodiosPorSerieEAno(serieBuscada, anoLancamento);
-            espisodiosRecebidos.forEach(item -> System.out.println(item.getTitulo()));
+            try {
+                var anoEscolhido = scan.nextInt();
+                scan.nextLine();
+
+                if (anoEscolhido > anoAtual) {
+                    System.out.println("O ano informado não pode ser maior que o ano atual!");
+                } else {
+                    List<EpisodioPersonalizado> espisodiosRecebidos = repositorio.episodiosPorSerieEAno(serieBuscada, anoEscolhido);
+                    espisodiosRecebidos.forEach(item -> System.out.println(item.getTitulo()));
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Por favor, informe um ano válido");
+                scan.nextLine();
+            }
         }
     }
 
